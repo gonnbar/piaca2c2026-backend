@@ -1,7 +1,6 @@
 import type { Response, NextFunction } from "express";
 import type { AuthRequest } from "../middlewares/auth.js";
 import * as patientService from "../services/patientService.js";
-import { Patient } from "../models/Patient.js";
 
 export async function create(req: AuthRequest, res: Response, next: NextFunction) {
   try {
@@ -14,11 +13,9 @@ export async function create(req: AuthRequest, res: Response, next: NextFunction
 
 export async function list(req: AuthRequest, res: Response, next: NextFunction) {
   try {
-    // Nutricionista ve sus pacientes; paciente no lista
-    const patients = await patientService.listPatients(
-      req.user!.role === "nutritionist" ? req.user!.id : undefined,
-    );
-    res.json({ success: true, data: patients });
+    const q = typeof req.query.q === "string" ? req.query.q : undefined;
+    const data = await patientService.listPatients(req.user!.id, q);
+    res.json({ success: true, data });
   } catch (err) {
     next(err);
   }
@@ -26,8 +23,8 @@ export async function list(req: AuthRequest, res: Response, next: NextFunction) 
 
 export async function getById(req: AuthRequest, res: Response, next: NextFunction) {
   try {
-    const patient = await patientService.getPatientById(req.params.id as string);
-    res.json({ success: true, data: patient });
+    const data = await patientService.findAccessiblePatient(req.params.id as string, req.user!);
+    res.json({ success: true, data });
   } catch (err) {
     next(err);
   }
@@ -35,9 +32,8 @@ export async function getById(req: AuthRequest, res: Response, next: NextFunctio
 
 export async function update(req: AuthRequest, res: Response, next: NextFunction) {
   try {
-    const patient = await Patient.findByIdAndUpdate(req.params.id as string, req.body, { new: true });
-    if (!patient) throw Object.assign(new Error("Paciente no encontrado"), { statusCode: 404 });
-    res.json({ success: true, data: patient });
+    const data = await patientService.updatePatient(req.params.id as string, req.user!, req.body);
+    res.json({ success: true, data });
   } catch (err) {
     next(err);
   }
@@ -45,9 +41,17 @@ export async function update(req: AuthRequest, res: Response, next: NextFunction
 
 export async function remove(req: AuthRequest, res: Response, next: NextFunction) {
   try {
-    const patient = await Patient.findByIdAndUpdate(req.params.id as string, { isActive: false }, { new: true });
-    if (!patient) throw Object.assign(new Error("Paciente no encontrado"), { statusCode: 404 });
+    await patientService.deactivatePatient(req.params.id as string, req.user!);
     res.json({ success: true, message: "Paciente dado de baja" });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function me(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const data = await patientService.getOwnPatient(req.user!.id);
+    res.json({ success: true, data });
   } catch (err) {
     next(err);
   }
