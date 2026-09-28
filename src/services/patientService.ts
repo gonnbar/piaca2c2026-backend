@@ -81,7 +81,14 @@ export async function updatePatient(id: string, user: AuthUser, body: Record<str
 
 export async function deactivatePatient(id: string, user: AuthUser) {
   const patient = await findAccessiblePatient(id, user);
+  const userId = patient.populated("user") ?? patient.user; // _id original aunque esté populado
   patient.isActive = false;
   await patient.save();
-  await User.findByIdAndUpdate(patient.user, { isActive: false });
+  await User.findByIdAndUpdate(userId, { isActive: false });
+}
+
+export async function getOwnPatient(userId: string) {
+  const patient = await Patient.findOne({ user: userId, isActive: true }).populate("user", "name email role");
+  if (!patient) throw notFound();
+  return patient;
 }
