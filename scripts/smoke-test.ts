@@ -178,6 +178,21 @@ async function main() {
   check("login con la clave nueva", r.status === 200 && !!r.body.token, r);
   tP = r.body.token ?? tP;
 
+    // ---------- Resumen del dashboard ----------
+  section("Resumen del dashboard");
+  r = await call("GET", "/consultations/summary", tN1);
+  check(
+    "resumen del nutricionista con pacientes, consultas y recientes",
+    r.status === 200 && r.body.data?.patients >= 1 && r.body.data?.consultations >= 1 && r.body.data?.recent?.length >= 1,
+    r,
+  );
+  r = await call("GET", "/consultations/summary", tP);
+  check(
+    "resumen del paciente con su última medición",
+    r.status === 200 && r.body.data?.consultations === 1 && r.body.data?.last?.weight === 79,
+    r,
+  );
+
   // ---------- Eliminar consulta ----------
   section("8. Eliminar consulta");
   r = await call("DELETE", `/consultations/${consultationId}`, tN1);

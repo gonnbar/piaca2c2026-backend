@@ -47,3 +47,12 @@ export async function remove(req: AuthRequest, res: Response, next: NextFunction
     next(err);
   }
 }
+
+export async function summary(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const data = await consultationService.getSummary(req.user!);
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+}
