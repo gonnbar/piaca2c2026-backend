@@ -9,6 +9,7 @@ export interface IPhoto extends mongoose.Document {
   view: "frente" | "perfil" | "espalda";
   url: string;
   filename: string;
+  notes?: string;
 }
 
 const photoSchema = new mongoose.Schema<IPhoto>(
@@ -19,6 +20,7 @@ const photoSchema = new mongoose.Schema<IPhoto>(
     view: { type: String, enum: ["frente", "perfil", "espalda"], required: true },
     url: { type: String, required: true },
     filename: { type: String, required: true },
+    notes: { type: String, trim: true, maxlength: 1000 },
   },
   { timestamps: true },
 );
