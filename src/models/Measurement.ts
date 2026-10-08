@@ -18,6 +18,7 @@ export interface IMeasurement extends mongoose.Document {
   pectoral?: number;
   axilar?: number;
   peroneoGemelar?: number;
+  consultation?: mongoose.Types.ObjectId;
   // Calculados
   imc?: number;
   bodyFatPercentage?: number;
@@ -31,6 +32,7 @@ const measurementSchema = new mongoose.Schema<IMeasurement>(
     date: { type: Date, default: Date.now },
     weight: { type: Number, min: 0 },
     height: { type: Number, min: 0 },
+    consultation: { type: mongoose.Schema.Types.ObjectId, ref: "Consultation", index: true },
     bicipital: Number,
     tricipital: Number,
     subescapular: Number,
