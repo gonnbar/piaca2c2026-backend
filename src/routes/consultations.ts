@@ -11,6 +11,7 @@ router.use(authenticate);
 
 router.get("/", authorize("nutritionist", "patient"), consultationController.list);
 router.post("/", authorize("nutritionist"), createConsultationValidator, validate, consultationController.create);
+router.get("/summary", authorize("nutritionist", "patient"), consultationController.summary);
 router.get("/:id", authorize("nutritionist", "patient"), consultationController.getById);
 router.patch("/:id", authorize("nutritionist"), updateConsultationValidator, validate, consultationController.update);
 router.delete("/:id", authorize("nutritionist"), consultationController.remove);
