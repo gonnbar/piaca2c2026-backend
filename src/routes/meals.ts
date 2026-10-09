@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/auth.js";
 import { Meal } from "../models/Meal.js";
 import { Food } from "../models/Food.js";
+import { getOwnPatient } from "../services/patientService.js";
 import { assertEditWindow } from "../utils/editWindow.js";
 import type { AuthRequest } from "../middlewares/auth.js";
 
@@ -41,6 +42,11 @@ router.get("/", async (req: AuthRequest, res, next) => {
 
 router.post("/", async (req: AuthRequest, res, next) => {
   try {
+    // Paciente solo registra sus propias comidas: fuerza patient al propio.
+    if (req.user!.role === "patient") {
+      const own = await getOwnPatient(req.user!.id);
+      req.body.patient = String(own._id);
+    }
     const totals = await computeTotals(req.body.items);
     const meal = await Meal.create({ ...req.body, createdBy: req.user!.id, ...totals });
     res.status(201).json({ success: true, data: meal });
@@ -54,6 +60,14 @@ router.put("/:id", async (req: AuthRequest, res, next) => {
     const doc = await Meal.findById(req.params.id);
     if (!doc) return res.status(404).json({ success: false, message: "No encontrado" });
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
+    // Paciente no puede reasignar la comida a otro paciente.
+    if (req.user!.role === "patient") {
+      const own = await getOwnPatient(req.user!.id);
+      if (String(doc.patient) !== String(own._id)) {
+        return res.status(403).json({ success: false, message: "Acceso denegado" });
+      }
+      delete req.body.patient;
+    }
     if (req.body.items) {
       const totals = await computeTotals(req.body.items);
       Object.assign(doc, req.body, totals);
