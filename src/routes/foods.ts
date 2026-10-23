@@ -1,31 +1,21 @@
 import { Router } from "express";
 import { authenticate } from "../middlewares/auth.js";
-import { Food } from "../models/Food.js";
+import { authorize } from "../middlewares/authorize.js";
+import { validate } from "../middlewares/validate.js";
+import { createFoodValidator, updateFoodValidator } from "../validators/food.js";
+import * as controller from "../controllers/foodController.js";
 
 const router = Router();
+
 router.use(authenticate);
 
-router.get("/", async (req, res, next) => {
-  try {
-    const { category, search } = req.query;
-    const filter: Record<string, unknown> = {};
-    if (category) filter.category = category;
-    if (search) filter.name = { $regex: search, $options: "i" };
-    const foods = await Food.find(filter).sort({ name: 1 }).limit(200);
-    res.json({ success: true, data: foods });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.get("/:id", async (req, res, next) => {
-  try {
-    const food = await Food.findById(req.params.id);
-    if (!food) return res.status(404).json({ success: false, message: "Alimento no encontrado" });
-    res.json({ success: true, data: food });
-  } catch (err) {
-    next(err);
-  }
-});
+// Consulta: ambos roles. Gestión: solo el nutricionista (administrador).
+router.get("/", controller.list);
+router.get("/:id", controller.getById);
+router.post("/", authorize("nutritionist"), createFoodValidator, validate, controller.create);
+router.put("/:id", authorize("nutritionist"), updateFoodValidator, validate, controller.update);
+// Borrado lógico (nunca físico) + reactivación de un alimento eliminado.
+router.delete("/:id", authorize("nutritionist"), controller.remove);
+router.patch("/:id/restore", authorize("nutritionist"), controller.restore);
 
 export default router;

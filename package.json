@@ -9,6 +9,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "seed": "tsx src/seeds/foods.ts",
+    "migrate:foods": "tsx scripts/migrate-food-isactive.ts",
     "smoke": "tsx scripts/smoke-test.ts"
   },
   "repository": {
