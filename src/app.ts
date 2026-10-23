@@ -15,6 +15,7 @@ import workoutRoutes from "./routes/workouts.js";
 import physicalActivityRoutes from "./routes/physicalActivity.js";
 import photoRoutes from "./routes/photos.js";
 import consultationRoutes from "./routes/consultations.js";
+import dashboardRoutes from "./routes/dashboard.js";
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use("/api/workouts", workoutRoutes);
 app.use("/api/physical-activity", physicalActivityRoutes);
 app.use("/api/photos", photoRoutes);
 app.use("/api/consultations", consultationRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 
 app.use(errorHandler);
 
