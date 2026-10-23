@@ -9,19 +9,6 @@ export function calculateIMC(weightKg: number, heightCm: number): number {
   return Number((weightKg / (heightM * heightM)).toFixed(2));
 }
 
-/** Placeholder hasta definir protocolo (Faulkner, Yuhasz, etc.) */
-export function calculateBodyFatPercentage(
-  _measurements: Record<string, number>,
-): number | null {
-  return null;
-}
-
-export function calculateMusclePercentage(
-  _measurements: Record<string, number>,
-): number | null {
-  return null;
-}
-
 export function calculateMealTotals(
   foods: { calories: number; protein: number; carbs: number; fat: number; grams: number }[],
 ) {

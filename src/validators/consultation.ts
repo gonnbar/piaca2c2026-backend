@@ -6,7 +6,7 @@ const measurementFields = [
   body("measurement").optional().isObject(),
   body("measurement.weight").optional().isFloat({ min: 1, max: 500 }).withMessage("Peso inválido (kg)"),
   body("measurement.height").optional().isFloat({ min: 50, max: 250 }).withMessage("Altura inválida (cm)"),
-  ...skinfolds.map((f) => body(`measurement.${f}`).optional().isFloat({ min: 0, max: 100 }).withMessage(`Pliegue ${f} inválido (mm)`)),
+  ...skinfolds.map((f) => body(`measurement.${f}`).optional().isFloat({ gt: 0, max: 100 }).withMessage(`Pliegue ${f} inválido (mm)`)),
 ];
 
 export const createConsultationValidator = [
