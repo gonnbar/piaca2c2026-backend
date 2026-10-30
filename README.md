@@ -35,7 +35,7 @@ seeds/        foods.ts, admin.ts
 /api/foods                (búsqueda por category/search)
 /api/workouts
 /api/physical-activity
-/api/photos               (Multer /uploads, view frente|perfil|espalda)
+/api/photos               (Multer, view frente|perfil|espalda; archivo autenticado en /api/photos/:id/file)
 /api/consultations        (solo nutritionist crea)
 /api/health               (check)
 ```

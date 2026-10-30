@@ -9,3 +9,8 @@ export const createPhotoValidator = [
   body("date").optional().isISO8601().withMessage("Fecha inválida").toDate(),
   body("notes").optional().isString().trim().isLength({ max: 1000 }),
 ];
+
+// Reemplazo: la vista y la fecha se conservan; solo se actualiza el archivo y las notas.
+export const replacePhotoValidator = [
+  body("notes").optional().isString().trim().isLength({ max: 1000 }),
+];
