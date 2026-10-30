@@ -14,7 +14,35 @@ export async function create(req: AuthRequest, res: Response, next: NextFunction
   } catch (err) {
     // Si falla la creación, no dejar el archivo huérfano en disco
     const f = (req as AuthRequest & { file?: Express.Multer.File }).file;
-    if (f) fs.unlink(`uploads/${f.filename}`, () => undefined);
+    if (f?.path) fs.unlink(f.path, () => undefined);
+    next(err);
+  }
+}
+
+export async function replace(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const data = await service.replacePhoto(
+      req.user!,
+      req.params.id as string,
+      (req as AuthRequest & { file?: Express.Multer.File }).file,
+      req.body as Record<string, unknown>,
+    );
+    res.json({ success: true, data });
+  } catch (err) {
+    const f = (req as AuthRequest & { file?: Express.Multer.File }).file;
+    if (f?.path) fs.unlink(f.path, () => undefined);
+    next(err);
+  }
+}
+
+export async function getFile(req: AuthRequest, res: Response, next: NextFunction) {
+  try {
+    const { filePath } = await service.getPhotoFile(req.user!, req.params.id as string);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.sendFile(filePath, (err) => {
+      if (err && !res.headersSent) next(err);
+    });
+  } catch (err) {
     next(err);
   }
 }
