@@ -200,6 +200,110 @@ async function main() {
   r = await call("GET", `/consultations/${consultationId}`, tN1);
   check("la consulta ya no existe (404)", r.status === 404, r);
 
+  // ---------- Alimentos (CRUD + borrado lógico) ----------
+  section("Alimentos: CRUD y borrado lógico");
+  const foodName = `Alimento Smoke ${suffix}`;
+  r = await call("POST", "/foods", tN1, {
+    name: foodName,
+    category: "cereales",
+    // kcal enviada a propósito: el backend debe ignorarla y calcularla (4/4/9).
+    calories: 9999,
+    protein: 5,
+    carbs: 20,
+    fat: 2,
+  });
+  check(
+    "nutricionista crea alimento con kcal calculada (118) → 201",
+    r.status === 201 && r.body.data?.isActive === true && r.body.data?.calories === 118,
+    r,
+  );
+  const foodId: string = r.body.data?._id;
+
+  r = await call("POST", "/foods", tN1, {
+    name: foodName,
+    category: "cereales",
+    protein: 1,
+    carbs: 1,
+    fat: 1,
+  });
+  check("nombre duplicado → 409", r.status === 409, r);
+
+  r = await call("POST", "/foods", tN1, {
+    name: "Categoría inválida",
+    category: "inventada",
+    protein: 1,
+    carbs: 1,
+    fat: 1,
+  });
+  check("categoría inválida → 400", r.status === 400, r);
+
+  r = await call("POST", "/foods", tN1, {
+    name: "Macro inválido",
+    category: "otros",
+    protein: 101,
+    carbs: 1,
+    fat: 1,
+  });
+  check("macro fuera de rango → 400", r.status === 400, r);
+
+  r = await call("POST", "/foods", tP, {
+    name: "Alimento Paciente",
+    category: "otros",
+    protein: 1,
+    carbs: 1,
+    fat: 0,
+  });
+  check("paciente no puede crear alimentos (403)", r.status === 403, r);
+
+  r = await call("PUT", `/foods/${foodId}`, tN1, {
+    name: foodName,
+    category: "cereales",
+    calories: 1,
+    protein: 6,
+    carbs: 25,
+    fat: 3,
+  });
+  check(
+    "nutricionista edita y recalcula kcal (151) → 200",
+    r.status === 200 && r.body.data?.calories === 151,
+    r,
+  );
+
+  r = await call("GET", `/foods?search=${encodeURIComponent(foodName)}`, tN1);
+  check("aparece en el listado", r.status === 200 && r.body.data?.length === 1, r);
+
+  r = await call("DELETE", `/foods/${foodId}`, tP);
+  check("paciente no puede eliminar alimentos (403)", r.status === 403, r);
+
+  r = await call("DELETE", `/foods/${foodId}`, tN1);
+  check("borrado lógico → 200", r.status === 200, r);
+
+  r = await call("GET", `/foods?search=${encodeURIComponent(foodName)}`, tN1);
+  check("el alimento eliminado no aparece por defecto", r.status === 200 && r.body.data?.length === 0, r);
+
+  r = await call(
+    "GET",
+    `/foods?search=${encodeURIComponent(foodName)}&includeInactive=true`,
+    tN1,
+  );
+  check("includeInactive muestra el eliminado (nutricionista)", r.status === 200 && r.body.data?.length === 1 && r.body.data?.[0]?.isActive === false, r);
+
+  r = await call(
+    "GET",
+    `/foods?search=${encodeURIComponent(foodName)}&includeInactive=true`,
+    tP,
+  );
+  check("includeInactive ignorado para paciente", r.status === 200 && r.body.data?.length === 0, r);
+
+  r = await call("POST", "/meals", tP, { patient: patientId, items: [{ food: foodId, grams: 100 }] });
+  check("comida con alimento eliminado → 400", r.status === 400, r);
+
+  r = await call("PATCH", `/foods/${foodId}/restore`, tN1);
+  check("reactivar alimento → 200", r.status === 200 && r.body.data?.isActive === true, r);
+
+  r = await call("GET", `/foods?search=${encodeURIComponent(foodName)}`, tN1);
+  check("el alimento reactivado vuelve al listado", r.status === 200 && r.body.data?.length === 1, r);
+
   // ---------- Baja del paciente ----------
   section("Baja del paciente");
   r = await call("DELETE", `/patients/${patientId}`, tN1);

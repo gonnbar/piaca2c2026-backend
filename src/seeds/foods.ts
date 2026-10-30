@@ -32,9 +32,20 @@ const foods = [
 
 async function seed() {
   await connectDB();
-  await Food.deleteMany({});
-  await Food.insertMany(foods);
-  console.log(`Seed foods: ${foods.length} insertados`);
+  // Upsert no destructivo: solo inserta los alimentos que faltan.
+  // No borra ni sobrescribe alimentos creados/editados por el nutricionista.
+  const result = await Food.bulkWrite(
+    foods.map((food) => ({
+      updateOne: {
+        filter: { name: food.name },
+        update: { $setOnInsert: { ...food, isActive: true } },
+        upsert: true,
+      },
+    })),
+  );
+  console.log(
+    `Seed foods: ${result.upsertedCount} insertados, ${foods.length - result.upsertedCount} ya existían`,
+  );
   process.exit(0);
 }
 

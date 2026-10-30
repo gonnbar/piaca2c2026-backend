@@ -13,8 +13,14 @@ export function errorHandler(
   if (err instanceof multer.MulterError || err.code === "LIMIT_FILE_SIZE") {
     status = 400;
   }
+  // Violación de índice único (carrera entre validación y escritura).
+  if (err.code === "11000") status = 409;
   const message =
-    status === 500 ? "Error interno del servidor" : err.message || "Error en la solicitud";
+    status === 500
+      ? "Error interno del servidor"
+      : status === 409 && !err.statusCode
+        ? "El registro ya existe"
+        : err.message || "Error en la solicitud";
 
   // No exponer stack en producción (AGENTS.md: Buenas prácticas)
   const payload: Record<string, unknown> = { success: false, message };
