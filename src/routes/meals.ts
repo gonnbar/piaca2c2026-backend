@@ -20,6 +20,10 @@ async function computeTotals(items: { food: string; grams: number }[]) {
   for (const item of items) {
     const f = map.get(String(item.food));
     if (!f) throw Object.assign(new Error(`Alimento no encontrado: ${item.food}`), { statusCode: 404 });
+    // Los alimentos con borrado lógico no pueden usarse en comidas nuevas.
+    if (f.isActive === false) {
+      throw Object.assign(new Error(`Alimento no disponible: ${f.name}`), { statusCode: 400 });
+    }
     totalCalories += (f.calories * item.grams) / 100;
     totalProtein += (f.protein * item.grams) / 100;
     totalCarbs += (f.carbs * item.grams) / 100;

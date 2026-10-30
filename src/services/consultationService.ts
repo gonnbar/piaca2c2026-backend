@@ -4,6 +4,7 @@ import { Measurement } from "../models/Measurement.js";
 import { Patient } from "../models/Patient.js";
 import { calculateIMC } from "../utils/calculations.js";
 import { getNutritionistDashboard } from "./dashboardService.js";
+import { computeMeasurementDerived } from "./measurementService.js";
 import type { AuthUser } from "../middlewares/auth.js";
 
 const httpError = (message: string, statusCode: number) => Object.assign(new Error(message), { statusCode });
@@ -58,9 +59,13 @@ async function saveMeasurement(consultation: IConsultation, nutritionistId: stri
     new Measurement({ patient: consultation.patient, createdBy: nutritionistId, consultation: consultation._id });
 
   measurement.set({ ...fields, date: consultation.date });
-  if (measurement.weight && measurement.height) {
-    measurement.imc = calculateIMC(measurement.weight, measurement.height);
-  }
+
+  const { fields: derived } = await computeMeasurementDerived(
+    String(consultation.patient),
+    measurement,
+    consultation.date,
+  );
+  measurement.set(derived);
   await measurement.save();
 }
 
@@ -123,7 +128,17 @@ export async function updateConsultation(id: string, user: AuthUser, body: Recor
   if (body.measurement && typeof body.measurement === "object") {
     await saveMeasurement(consultation, user.id, body.measurement as Record<string, unknown>);
   } else if ("date" in body) {
-    await Measurement.updateOne({ consultation: consultation._id }, { date: consultation.date });
+    const measurement = await Measurement.findOne({ consultation: consultation._id });
+    if (measurement) {
+      measurement.date = consultation.date;
+      const { fields: derived } = await computeMeasurementDerived(
+        String(consultation.patient),
+        measurement,
+        consultation.date,
+      );
+      measurement.set(derived);
+      await measurement.save();
+    }
   }
   return getConsultation(id, user);
 }
