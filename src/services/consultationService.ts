@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { Consultation, type IConsultation } from "../models/Consultation.js";
 import { Measurement } from "../models/Measurement.js";
 import { Patient } from "../models/Patient.js";
+import { calculateIMC } from "../utils/calculations.js";
+import { getNutritionistDashboard } from "./dashboardService.js";
 import { computeMeasurementDerived } from "./measurementService.js";
 import type { AuthUser } from "../middlewares/auth.js";
 
@@ -148,42 +150,21 @@ export async function deleteConsultation(id: string, user: AuthUser) {
 }
 
 export async function getSummary(user: AuthUser) {
-  if (user.role === "patient") {
-    const own = await Patient.findOne({ user: user.id, isActive: true }).select("_id");
-    if (!own) throw httpError("Paciente no encontrado", 404);
-
-    const [count, last] = await Promise.all([
-      Consultation.countDocuments({ patient: own._id }),
-      Consultation.findOne({ patient: own._id }).sort({ date: -1 }).select("date"),
-    ]);
-    const measurement = last ? await Measurement.findOne({ consultation: last._id }) : null;
-
-    return {
-      consultations: count,
-      last: last ? { date: last.date, weight: measurement?.weight ?? null, imc: measurement?.imc ?? null } : null,
-    };
+  if (user.role === "nutritionist") {
+    return getNutritionistDashboard(user);
   }
 
-  const patients = await Patient.find({ nutritionist: user.id, isActive: true }).select("_id fullName");
-  const ids = patients.map((p) => p._id);
-  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const own = await Patient.findOne({ user: user.id, isActive: true }).select("_id");
+  if (!own) throw httpError("Paciente no encontrado", 404);
 
-  const [total, lastMonth, recent] = await Promise.all([
-    Consultation.countDocuments({ patient: { $in: ids } }),
-    Consultation.countDocuments({ patient: { $in: ids }, date: { $gte: since } }),
-    Consultation.find({ patient: { $in: ids } }).sort({ date: -1 }).limit(5).select("date patient"),
+  const [count, last] = await Promise.all([
+    Consultation.countDocuments({ patient: own._id }),
+    Consultation.findOne({ patient: own._id }).sort({ date: -1 }).select("date"),
   ]);
+  const measurement = last ? await Measurement.findOne({ consultation: last._id }) : null;
 
-  const names = new Map(patients.map((p) => [String(p._id), p.fullName]));
   return {
-    patients: patients.length,
-    consultations: total,
-    consultationsLast30Days: lastMonth,
-    recent: recent.map((c) => ({
-      _id: c._id,
-      date: c.date,
-      patientId: c.patient,
-      patientName: names.get(String(c.patient)) ?? "",
-    })),
+    consultations: count,
+    last: last ? { date: last.date, weight: measurement?.weight ?? null, imc: measurement?.imc ?? null } : null,
   };
 }
