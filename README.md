@@ -8,7 +8,7 @@ API REST para seguimiento integral de pacientes de nutrición deportiva/culturis
 - JWT (`jsonwebtoken`) + bcrypt
 - Multer (fotos), express-validator, CORS, Helmet, Morgan
 
-## Arquitectura AGENTS.md
+## Arquitectura
 ```
 route → middleware → controller → service → model → MongoDB
 ```
@@ -25,19 +25,19 @@ utils/        calculations.ts (IMC/macros), editWindow.ts (10min), apiResponse.t
 seeds/        foods.ts, admin.ts
 ```
 
-## Endpoints (AGENTS.md)
+## Endpoints
 ```
 /api/auth
-/api/patients            (nutritionist CRUD, soft delete isActive)
+/api/patients            
 /api/patients/:id
-/api/measurements        (con cálculo IMC, ventana 10min para patient)
-/api/meals                (cálculo automático macros por Food.grams)
-/api/foods                (búsqueda por category/search)
+/api/measurements        
+/api/meals                
+/api/foods                
 /api/workouts
 /api/physical-activity
-/api/photos               (Multer, view frente|perfil|espalda; archivo autenticado en /api/photos/:id/file)
-/api/consultations        (solo nutritionist crea)
-/api/health               (check)
+/api/photos               
+/api/consultations        
+/api/health               
 ```
 
 ## Roles
@@ -68,10 +68,8 @@ npm run seed     # tsx src/seeds/foods.ts (19 alimentos MVP)
 - Passwords hasheados bcrypt (nunca plain, `User.ts:28`), no se exponen en JSON.
 - Validación con express-validator antes de DB.
 - Respuestas error consistentes `{success:false,message}` (`middlewares/errorHandler.ts:12`).
-- `utils/calculations.ts` y `utils/editWindow.ts` separados de controladores/UI (AGENTS.md).
+- `utils/calculations.ts` y `utils/editWindow.ts` separados de controladores/UI .
 
-## Base de alimentos MVP
-carnes, huevos, leche, quesos, yogur, verduras, cereales, frutas, semillas, miel, azúcar, aceites, grasas (`seeds/foods.ts:3`).
 
 ## Gráficos
 Backend expone históricos con `date` para que frontend (Recharts) consuma evolución peso/IMC/macros/cargas.
