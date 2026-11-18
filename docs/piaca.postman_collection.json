@@ -1,0 +1,2842 @@
+{
+  "info": {
+    "name": "PIACA API - Casos de prueba",
+    "description": "Colección autocontenida para ejecutar los 26 casos de prueba de pruebas.md contra la API PIACA.\n\nRequisitos:\n- Backend en http://localhost:3000 (variable baseUrl) y seed demo cargado.\n- Importar solo este archivo: las variables están a nivel colección.\n\nOrden de ejecución:\n- Ejecutar los folders en orden. El folder 00 obtiene token, patientId, otherPatientId y otherMealId.\n- El folder 09 incluye una PAUSA manual: después de crear el registro en 23a, esperar al menos 10 minutos (recomendado 11) antes de ejecutar 23b y 24.\n- El folder 99 Cleanup elimina los registros creados; es opcional.\n\nNotas:\n- Los casos 25 y 26 validan las fuentes de datos de la API; los gráficos se renderizan en el frontend.\n- Las fotos usan rutas absolutas de esta máquina. Si el proyecto se mueve, re-seleccionar los archivos en los requests de fotos.\n- La foto válida se crea con una fecha futura aleatoria para evitar el 409 por duplicado.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@piaca.com",
+      "type": "string"
+    },
+    {
+      "key": "adminPassword",
+      "value": "admin123",
+      "type": "string"
+    },
+    {
+      "key": "patientEmail",
+      "value": "valentina@demo.com",
+      "type": "string"
+    },
+    {
+      "key": "patientPassword",
+      "value": "demo1234",
+      "type": "string"
+    },
+    {
+      "key": "newPatientPassword",
+      "value": "prueba123",
+      "type": "string"
+    },
+    {
+      "key": "photoFile",
+      "value": "/home/gon/Documentos/unahur/PIACA/piaca2c2026-backend/src/seeds/assets/frente.png",
+      "type": "string"
+    },
+    {
+      "key": "invalidFile",
+      "value": "/home/gon/Documentos/unahur/PIACA/piaca2c2026-backend/docs/anthropometry.md",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patientToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "newPatientToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "patientId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otherPatientId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "otherMealId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "newPatientId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "newPatientEmail",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "newPatientDni",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "uniqueSuffix",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "foodId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "foodCalories",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "foodProtein",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "foodCarbs",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "foodFat",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "riceId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "riceCalories",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "riceProtein",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "riceCarbs",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "riceFat",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "bmiMeasurementId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "incompleteMeasurementId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "fullMeasurementId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "mealSingleId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "mealMultiId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "mealRegisterId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "withinWindowMealId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "workoutId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customWorkoutId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "activityId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "expiredActivityId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "photoId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "photoDate",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "consultationId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 Setup y Caso 1",
+      "description": "Obtiene token de nutricionista, token de paciente, patientId, otherPatientId y otherMealId. También cubre el caso 1 (login exitoso de ambos roles).",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"API disponible\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().success).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 1a - Login nutricionista",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{adminPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 1a: login de nutricionista\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.user.role).to.eql(\"nutritionist\");",
+                  "  pm.expect(json.token).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "if (json.token) pm.collectionVariables.set(\"token\", json.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 1b - Login paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{patientEmail}}\",\n  \"password\": \"{{patientPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 1b: login de paciente\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.user.role).to.eql(\"patient\");",
+                  "  pm.expect(json.token).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "if (json.token) pm.collectionVariables.set(\"patientToken\", json.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup - GET /patients/me",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/patients/me",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Setup: paciente autenticado\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.data._id).to.be.a(\"string\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"patientId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup - Buscar paciente Mateo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/patients?q=Mateo"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Setup: paciente alternativo disponible\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "});",
+                  "if (json.data && json.data[0]) pm.collectionVariables.set(\"otherPatientId\", json.data[0]._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Setup - Comida de Mateo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/meals?patient={{otherPatientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Setup: comida del paciente alternativo\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "});",
+                  "if (json.data && json.data[0]) pm.collectionVariables.set(\"otherMealId\", json.data[0]._id);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 Autenticación",
+      "description": "Caso 2: credenciales inválidas.",
+      "item": [
+        {
+          "name": "Caso 2 - Login con contraseña incorrecta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"incorrecta\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 2: credenciales inválidas\", () => {",
+                  "  pm.response.to.have.status(401);",
+                  "  const json = pm.response.json();",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Credenciales inválidas\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 Autorización",
+      "description": "Casos 3 y 4: el paciente no puede acceder a endpoints de nutricionista ni a datos de otro paciente.",
+      "item": [
+        {
+          "name": "Caso 3 - Paciente intenta listar pacientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/patients",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Acceso denegado para paciente\", () => {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().success).to.eql(false);",
+                  "  pm.expect(pm.response.json().message).to.eql(\"Acceso denegado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 3 - Paciente intenta ver dashboard",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/dashboard/summary",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Acceso denegado para paciente\", () => {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().success).to.eql(false);",
+                  "  pm.expect(pm.response.json().message).to.eql(\"Acceso denegado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 3 - Paciente intenta crear alimento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/foods",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Acceso denegado para paciente\", () => {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(pm.response.json().success).to.eql(false);",
+                  "  pm.expect(pm.response.json().message).to.eql(\"Acceso denegado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 4 - Paciente intenta ver otro paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/patients/{{otherPatientId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 4: paciente ajeno no visible\", () => {",
+                  "  pm.response.to.have.status(404);",
+                  "  pm.expect(pm.response.json().message).to.eql(\"Paciente no encontrado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 4 - Paciente intenta editar comida ajena",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals/{{otherMealId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 4: comida ajena no editable\", () => {",
+                  "  pm.response.to.have.status(404);",
+                  "  pm.expect(pm.response.json().message).to.eql(\"No encontrado\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 4 - Mediciones ajenas devuelven las propias",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/measurements?patient={{otherPatientId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const own = pm.collectionVariables.get(\"patientId\");",
+                  "const other = pm.collectionVariables.get(\"otherPatientId\");",
+                  "pm.test(\"Caso 4: mediciones ajenas devuelven las propias\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "  pm.expect(json.data.every((m) => String(m.patient) === own)).to.eql(true);",
+                  "  pm.expect(json.data.every((m) => String(m.patient) !== other)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 Pacientes",
+      "description": "Casos 5 y 6: alta de paciente con credenciales iniciales y validación de datos inválidos.",
+      "item": [
+        {
+          "name": "Caso 5 - Alta de paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/patients",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Paciente Prueba {{uniqueSuffix}}\",\n  \"email\": \"{{newPatientEmail}}\",\n  \"password\": \"{{newPatientPassword}}\",\n  \"birthDate\": \"1995-05-10\",\n  \"sex\": \"F\",\n  \"dni\": \"{{newPatientDni}}\",\n  \"phone\": \"+54 11 5555-9999\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const suffix = Date.now().toString().slice(-8);",
+                  "const emailSuffix = String(Date.now()) + String(Math.floor(Math.random() * 1000));",
+                  "pm.collectionVariables.set(\"uniqueSuffix\", suffix);",
+                  "pm.collectionVariables.set(\"newPatientEmail\", \"nuevo.paciente.\" + emailSuffix + \"@demo.com\");",
+                  "pm.collectionVariables.set(\"newPatientDni\", suffix);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 5: alta de paciente\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.data._id).to.be.a(\"string\");",
+                  "  pm.expect(json.data.password).to.eql(undefined);",
+                  "  pm.expect(json.data.user).to.exist;",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"newPatientId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 5 - Login del paciente creado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{newPatientEmail}}\",\n  \"password\": \"{{newPatientPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 5: credenciales iniciales del paciente\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.user.role).to.eql(\"patient\");",
+                  "});",
+                  "if (json.token) pm.collectionVariables.set(\"newPatientToken\", json.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 6 - Alta de paciente con datos inválidos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/patients",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"\",\n  \"email\": \"no-es-email\",\n  \"password\": \"123\",\n  \"dni\": \"abc\",\n  \"sex\": \"Z\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 6: validación de paciente\", () => {",
+                  "  pm.response.to.have.status(400);",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Error de validación\");",
+                  "  pm.expect(json.errors.length).to.be.greaterThan(2);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 Consultas",
+      "description": "Casos 7 y 8: historia de consultas y visibilidad de notas privadas según rol.",
+      "item": [
+        {
+          "name": "Caso 7 - Crear consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/consultations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"observations\": \"Consulta de prueba Postman\",\n  \"privateNotes\": \"NOTA_PRIVADA_SOLO_NUTRICIONISTA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 7: consulta creada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.success).to.eql(true);",
+                  "  pm.expect(json.data._id).to.be.a(\"string\");",
+                  "  pm.expect(json.data.privateNotes).to.eql(\"NOTA_PRIVADA_SOLO_NUTRICIONISTA\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"consultationId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 7 - Listar consultas del paciente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/consultations?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"consultationId\");",
+                  "pm.test(\"Caso 7: consulta en el historial\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((c) => String(c._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 8 - Consulta con notas privadas (nutricionista)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/consultations/{{consultationId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 8: nutricionista ve notas privadas\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().data.privateNotes).to.eql(\"NOTA_PRIVADA_SOLO_NUTRICIONISTA\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 8 - Consulta sin notas privadas (paciente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/consultations/{{consultationId}}",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 8: paciente no ve notas privadas\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.privateNotes).to.eql(undefined);",
+                  "  pm.expect(json.data.observations).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 8 - Listado del paciente sin notas privadas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/consultations",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 8: listado sin notas privadas\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.every((c) => c.privateNotes === undefined)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 Antropometría",
+      "description": "Casos 9 a 12: consulta, IMC, medición incompleta y antropometría completa con los 9 pliegues.",
+      "item": [
+        {
+          "name": "Caso 9 - Consultar mediciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/measurements?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 9: mediciones consultables\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "  pm.expect(json.data.some((m) => typeof m.weight === \"number\" && typeof m.height === \"number\")).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 10 - Medición con IMC calculado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/measurements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patientId}}\",\n  \"weight\": 70,\n  \"height\": 175\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 10: IMC calculado\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.imc).to.eql(22.86);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"bmiMeasurementId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 11 - Medición solo con peso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/measurements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weight\": 70\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 11: medición incompleta sin derivados\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.imc).to.eql(null);",
+                  "  pm.expect(json.data.bodyFatPercentage).to.eql(null);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"incompleteMeasurementId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 12 - Medición con 9 pliegues",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/measurements",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patient\": \"{{patientId}}\",\n  \"weight\": 72,\n  \"height\": 175,\n  \"bicipital\": 8,\n  \"tricipital\": 12,\n  \"subescapular\": 10,\n  \"suprailiaco\": 9,\n  \"crural\": 15,\n  \"abdominal\": 14,\n  \"pectoral\": 7,\n  \"axilar\": 8,\n  \"peroneoGemelar\": 11\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const folds = [\"bicipital\",\"tricipital\",\"subescapular\",\"suprailiaco\",\"crural\",\"abdominal\",\"pectoral\",\"axilar\",\"peroneoGemelar\"];",
+                  "pm.test(\"Caso 12: antropometría completa\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.imc).to.be.a(\"number\");",
+                  "  pm.expect(json.data.bodyFatPercentage).to.be.a(\"number\");",
+                  "  pm.expect(json.data.bodyFatPercentage).to.be.greaterThan(0);",
+                  "  folds.forEach((f) => pm.expect(json.data[f]).to.be.a(\"number\"));",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"fullMeasurementId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 12 - Verificar medición completa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/measurements?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"fullMeasurementId\");",
+                  "pm.test(\"Caso 12: medición completa consultable\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((m) => String(m._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 Alimentación",
+      "description": "Casos 13 a 16: búsqueda de alimentos, cálculo nutricional y registro/listado de comidas.",
+      "item": [
+        {
+          "name": "Caso 13 - Buscar alimento Pollo pechuga",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/foods?search=Pollo%20pechuga"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const food = json.data.find((f) => f.name.toLowerCase().includes(\"pollo\"));",
+                  "pm.test(\"Caso 13: alimento disponible\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(food).to.exist;",
+                  "  if (food) {",
+                  "    pm.expect(food.calories).to.be.a(\"number\");",
+                  "    pm.expect(food.protein).to.be.a(\"number\");",
+                  "    pm.expect(food.carbs).to.be.a(\"number\");",
+                  "    pm.expect(food.fat).to.be.a(\"number\");",
+                  "  }",
+                  "});",
+                  "if (food) {",
+                  "  pm.collectionVariables.set(\"foodId\", food._id);",
+                  "  pm.collectionVariables.set(\"foodCalories\", String(food.calories));",
+                  "  pm.collectionVariables.set(\"foodProtein\", String(food.protein));",
+                  "  pm.collectionVariables.set(\"foodCarbs\", String(food.carbs));",
+                  "  pm.collectionVariables.set(\"foodFat\", String(food.fat));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 13 - Buscar alimento Arroz blanco",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/foods?search=Arroz%20blanco"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const food = json.data.find((f) => f.name.toLowerCase().includes(\"arroz\"));",
+                  "pm.test(\"Caso 13: alimento complementario disponible\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(food).to.exist;",
+                  "});",
+                  "if (food) {",
+                  "  pm.collectionVariables.set(\"riceId\", food._id);",
+                  "  pm.collectionVariables.set(\"riceCalories\", String(food.calories));",
+                  "  pm.collectionVariables.set(\"riceProtein\", String(food.protein));",
+                  "  pm.collectionVariables.set(\"riceCarbs\", String(food.carbs));",
+                  "  pm.collectionVariables.set(\"riceFat\", String(food.fat));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 14 - Comida con un alimento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"food\": \"{{foodId}}\",\n      \"grams\": 150\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const cal = Number(pm.collectionVariables.get(\"foodCalories\"));",
+                  "const prot = Number(pm.collectionVariables.get(\"foodProtein\"));",
+                  "const carbs = Number(pm.collectionVariables.get(\"foodCarbs\"));",
+                  "const fat = Number(pm.collectionVariables.get(\"foodFat\"));",
+                  "pm.test(\"Caso 14: cálculo nutricional de un alimento\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.totalCalories).to.be.closeTo(cal * 1.5, 0.01);",
+                  "  pm.expect(json.data.totalProtein).to.be.closeTo(prot * 1.5, 0.01);",
+                  "  pm.expect(json.data.totalCarbs).to.be.closeTo(carbs * 1.5, 0.01);",
+                  "  pm.expect(json.data.totalFat).to.be.closeTo(fat * 1.5, 0.01);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"mealSingleId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 15 - Comida con dos alimentos",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"food\": \"{{foodId}}\",\n      \"grams\": 150\n    },\n    {\n      \"food\": \"{{riceId}}\",\n      \"grams\": 200\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const cal = Number(pm.collectionVariables.get(\"foodCalories\")) * 1.5 + Number(pm.collectionVariables.get(\"riceCalories\")) * 2;",
+                  "const prot = Number(pm.collectionVariables.get(\"foodProtein\")) * 1.5 + Number(pm.collectionVariables.get(\"riceProtein\")) * 2;",
+                  "const carbs = Number(pm.collectionVariables.get(\"foodCarbs\")) * 1.5 + Number(pm.collectionVariables.get(\"riceCarbs\")) * 2;",
+                  "const fat = Number(pm.collectionVariables.get(\"foodFat\")) * 1.5 + Number(pm.collectionVariables.get(\"riceFat\")) * 2;",
+                  "pm.test(\"Caso 15: cálculo nutricional de varios alimentos\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.totalCalories).to.be.closeTo(cal, 0.01);",
+                  "  pm.expect(json.data.totalProtein).to.be.closeTo(prot, 0.01);",
+                  "  pm.expect(json.data.totalCarbs).to.be.closeTo(carbs, 0.01);",
+                  "  pm.expect(json.data.totalFat).to.be.closeTo(fat, 0.01);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"mealMultiId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 16 - Registrar comida",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"food\": \"{{foodId}}\",\n      \"grams\": 100\n    },\n    {\n      \"food\": \"{{riceId}}\",\n      \"grams\": 100\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 16: comida registrada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data._id).to.be.a(\"string\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"mealRegisterId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 16 - Listar comidas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/meals?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"mealRegisterId\");",
+                  "pm.test(\"Caso 16: comida persistida\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((m) => String(m._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "07 Actividad y entrenamiento",
+      "description": "Casos 17 a 19: registro y consulta de actividad física y entrenamientos de fuerza.",
+      "item": [
+        {
+          "name": "Caso 17 - Registrar actividad física",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/physical-activity",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"Caminata\",\n  \"duration\": 45,\n  \"intensity\": \"media\",\n  \"notes\": \"Actividad de prueba Postman\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 17: actividad registrada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.type).to.eql(\"Caminata\");",
+                  "  pm.expect(json.data.duration).to.eql(45);",
+                  "  pm.expect(json.data.intensity).to.eql(\"media\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"activityId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 17 - Listar actividades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/physical-activity?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"activityId\");",
+                  "pm.test(\"Caso 17: actividad persistida\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((a) => String(a._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 18 - Registrar entrenamiento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/workouts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Sesión de prueba Postman\",\n  \"perceivedIntensity\": 8,\n  \"exercises\": [\n    {\n      \"name\": \"Sentadilla\",\n      \"sets\": 4,\n      \"reps\": 10,\n      \"weight\": 80,\n      \"notes\": \"Profunda\"\n    },\n    {\n      \"name\": \"Press banca\",\n      \"sets\": 4,\n      \"reps\": 8,\n      \"weight\": 60\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 18: entrenamiento registrado\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.exercises).to.be.an(\"array\").with.lengthOf(2);",
+                  "  pm.expect(json.data.perceivedIntensity).to.eql(8);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"workoutId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 18 - Listar entrenamientos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/workouts?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"workoutId\");",
+                  "pm.test(\"Caso 18: entrenamiento persistido\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((w) => String(w._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 19 - Entrenamiento con ejercicio personalizado",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/workouts",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notes\": \"Ejercicio personalizado\",\n  \"exercises\": [\n    {\n      \"name\": \"Remo con banda elástica\",\n      \"sets\": 3,\n      \"reps\": 12,\n      \"weight\": 0\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 19: ejercicio personalizado\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.exercises[0].name).to.eql(\"Remo con banda elástica\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"customWorkoutId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 19 - Listar entrenamientos personalizados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/workouts?patient={{patientId}}&exercise=Remo"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"customWorkoutId\");",
+                  "pm.test(\"Caso 19: ejercicio personalizado persistido\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((w) => String(w._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "08 Fotografías",
+      "description": "Casos 20 y 21: subida, consulta y descarga de fotos; rechazo de archivos inválidos.",
+      "item": [
+        {
+          "name": "Caso 20 - Subir fotografía",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/photos",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/home/gon/Documentos/unahur/PIACA/piaca2c2026-backend/src/seeds/assets/frente.png"
+                },
+                {
+                  "key": "view",
+                  "value": "frente",
+                  "type": "text"
+                },
+                {
+                  "key": "date",
+                  "value": "{{photoDate}}",
+                  "type": "text"
+                },
+                {
+                  "key": "notes",
+                  "value": "Fotografía de prueba Postman",
+                  "type": "text"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const d = new Date();",
+                  "d.setUTCDate(d.getUTCDate() + 400 + Math.floor(Math.random() * 100000));",
+                  "pm.collectionVariables.set(\"photoDate\", d.toISOString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 20: fotografía registrada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "  pm.expect(json.data.view).to.eql(\"frente\");",
+                  "  pm.expect(json.data.url).to.include(\"/api/photos/\");",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"photoId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 20 - Listar fotografías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/photos?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = pm.collectionVariables.get(\"photoId\");",
+                  "pm.test(\"Caso 20: fotografía persistida\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.some((p) => String(p._id) === id)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 20 - Descargar archivo de fotografía",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/photos/{{photoId}}/file",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 20: archivo de fotografía accesible\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  const type = pm.response.headers.get(\"Content-Type\") || \"\";",
+                  "  pm.expect(type.startsWith(\"image/\")).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 21 - Subir archivo inválido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/photos",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": "/home/gon/Documentos/unahur/PIACA/piaca2c2026-backend/docs/anthropometry.md"
+                },
+                {
+                  "key": "view",
+                  "value": "frente",
+                  "type": "text"
+                },
+                {
+                  "key": "date",
+                  "value": "2099-01-01",
+                  "type": "text"
+                }
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 21: archivo inválido rechazado\", () => {",
+                  "  pm.response.to.have.status(400);",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"Solo se permiten imágenes (jpg, jpeg, png, webp)\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "09 Regla 10 minutos",
+      "description": "Caso 22 (dentro de la ventana) y casos 23/24 (fuera de la ventana). IMPORTANTE: después de 'Caso 23a' hay una PAUSA manual. Esperar al menos 10 minutos (recomendado 11) antes de ejecutar 'Caso 23b' y 'Caso 24'.",
+      "item": [
+        {
+          "name": "Caso 22 - Crear comida dentro de la ventana",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"food\": \"{{foodId}}\",\n      \"grams\": 100\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 22: comida creada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"withinWindowMealId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 22 - Editar comida dentro de la ventana",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/meals/{{withinWindowMealId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"food\": \"{{foodId}}\",\n      \"grams\": 200\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const cal = Number(pm.collectionVariables.get(\"foodCalories\")) * 2;",
+                  "pm.test(\"Caso 22: edición dentro de la ventana\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.totalCalories).to.be.closeTo(cal, 0.01);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 23a - Crear actividad para la ventana",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/physical-activity",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"Caminata\",\n  \"duration\": 45,\n  \"intensity\": \"media\",\n  \"notes\": \"Registro para probar la ventana de 10 minutos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 23a: actividad creada\", () => {",
+                  "  pm.response.to.have.status(201);",
+                  "});",
+                  "if (json.data && json.data._id) pm.collectionVariables.set(\"expiredActivityId\", json.data._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "PAUSA - Esperar 10 minutos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health",
+            "description": "Detener la ejecución acá. Esperar al menos 10 minutos (recomendado 11) desde la creación del registro del caso 23a. Luego ejecutar 'Caso 23b' y 'Caso 24'. Postman no puede pausar automáticamente la colección de forma confiable; la pausa es manual.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"PAUSA: esperar 10 minutos antes del caso 23b\", () => {",
+                  "  pm.expect(true).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 23b - Editar actividad vencida como paciente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/physical-activity/{{expiredActivityId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duration\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{patientToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 23b: ventana vencida bloquea al paciente\", () => {",
+                  "  pm.response.to.have.status(403);",
+                  "  pm.expect(json.success).to.eql(false);",
+                  "  pm.expect(json.message).to.eql(\"El registro ya no puede modificarse\");",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 24 - Editar actividad vencida como nutricionista",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/physical-activity/{{expiredActivityId}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"duration\": 60\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 24: nutricionista corrige fuera de ventana\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.duration).to.eql(60);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "10 Gráficos",
+      "description": "Casos 25 y 26: datos de evolución disponibles y respuestas vacías para pacientes sin registros. Los gráficos se renderizan en el frontend; esta colección valida las fuentes de datos de la API.",
+      "item": [
+        {
+          "name": "Caso 25 - Evolución corporal",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/measurements?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: datos de evolución corporal\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "  pm.expect(json.data.some((m) => typeof m.weight === \"number\" && typeof m.imc === \"number\")).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 25 - Evolución nutricional",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/meals?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: datos de evolución nutricional\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "  pm.expect(json.data.some((m) => typeof m.totalCalories === \"number\")).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 25 - Evolución de actividad física",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/physical-activity?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: datos de actividad física\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 25 - Evolución de entrenamiento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/workouts?patient={{patientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: datos de entrenamiento\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.length).to.be.greaterThan(0);",
+                  "  pm.expect(json.data.some((w) => w.exercises.length >= 1)).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 25 - Dashboard resumen",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/dashboard/summary"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: resumen del dashboard\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.patients).to.be.greaterThan(4);",
+                  "  pm.expect(json.data.metrics.totalPatients).to.be.greaterThan(4);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 25 - Dashboard IMC",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/dashboard/imc-estadisticas"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.test(\"Caso 25: estadísticas de IMC\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(json.data.totalPatients).to.be.greaterThan(4);",
+                  "  const sum = json.data.underweight + json.data.normalWeight + json.data.overweight + json.data.obese;",
+                  "  pm.expect(sum).to.eql(json.data.totalPatients);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 26 - Comidas futuras vacías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/meals?patient={{patientId}}&date=2099-01-01"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 26: sin comidas en fecha futura\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().data.length).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 26 - Mediciones de paciente nuevo vacías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/measurements?patient={{newPatientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 26: paciente nuevo sin mediciones\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().data.length).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 26 - Entrenamientos de paciente nuevo vacíos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/workouts?patient={{newPatientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 26: paciente nuevo sin entrenamientos\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().data.length).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Caso 26 - Actividades de paciente nuevo vacías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/physical-activity?patient={{newPatientId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Caso 26: paciente nuevo sin actividades\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "  pm.expect(pm.response.json().data.length).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "99 Cleanup",
+      "description": "Elimina los registros creados por la colección usando el token de nutricionista. Ejecutar al final. Si tu versión de Postman no soporta pm.execution.skipRequest, ejecutá este folder solo después de una corrida completa.",
+      "item": [
+        {
+          "name": "Cleanup - Medición IMC",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/measurements/{{bmiMeasurementId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"bmiMeasurementId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: medición IMC OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Medición incompleta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/measurements/{{incompleteMeasurementId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"incompleteMeasurementId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: medición incompleta OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Medición completa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/measurements/{{fullMeasurementId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"fullMeasurementId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: medición completa OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Comida simple",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/meals/{{mealSingleId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"mealSingleId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: comida simple OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Comida doble",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/meals/{{mealMultiId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"mealMultiId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: comida doble OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Comida registro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/meals/{{mealRegisterId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"mealRegisterId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: comida registro OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Comida ventana",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/meals/{{withinWindowMealId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"withinWindowMealId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: comida ventana OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Entrenamiento",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/workouts/{{workoutId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"workoutId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: entrenamiento OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Entrenamiento personalizado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/workouts/{{customWorkoutId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"customWorkoutId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: entrenamiento personalizado OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Actividad",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/physical-activity/{{activityId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"activityId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: actividad OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Actividad vencida",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/physical-activity/{{expiredActivityId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"expiredActivityId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: actividad vencida OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Fotografía",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/photos/{{photoId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"photoId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: fotografía OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Consulta",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/consultations/{{consultationId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"consultationId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: consulta OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cleanup - Paciente nuevo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/patients/{{newPatientId}}"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get(\"newPatientId\")) {",
+                  "  if (pm.execution && typeof pm.execution.skipRequest === \"function\") {",
+                  "    pm.execution.skipRequest();",
+                  "  }",
+                  "}"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Cleanup: paciente nuevo OK\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

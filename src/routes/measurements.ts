@@ -107,6 +107,12 @@ router.put("/:id", updateMeasurementValidator, validate, async (req: AuthRequest
     if (!doc) throw notFound();
 
     await assertDocAccess(req.user!, doc.patient);
+    if (doc.consultation) {
+      throw Object.assign(
+        new Error("La medición pertenece a una consulta. Editala desde la consulta."),
+        { statusCode: 409 },
+      );
+    }
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
     assertMeasurementRole(req.body, req.user!.role);
 
@@ -136,6 +142,12 @@ router.delete("/:id", async (req: AuthRequest, res: Response, next: NextFunction
     if (!doc) throw notFound();
 
     await assertDocAccess(req.user!, doc.patient);
+    if (doc.consultation) {
+      throw Object.assign(
+        new Error("La medición pertenece a una consulta. Corregila o eliminá la consulta."),
+        { statusCode: 409 },
+      );
+    }
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
 
     await doc.deleteOne();

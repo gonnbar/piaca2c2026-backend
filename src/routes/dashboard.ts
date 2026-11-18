@@ -7,5 +7,6 @@ const router = Router();
 
 router.use(authenticate);
 router.get("/summary", authorize("nutritionist"), dashboardController.summary);
+router.get("/imc-estadisticas", authorize("nutritionist"), dashboardController.imcEstadisticas);
 
 export default router;

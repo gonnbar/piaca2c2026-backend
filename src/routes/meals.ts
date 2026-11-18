@@ -2,7 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../middlewares/auth.js";
 import { Meal } from "../models/Meal.js";
 import { Food } from "../models/Food.js";
-import { getOwnPatient } from "../services/patientService.js";
+import { assertDocAccess, resolvePatientId } from "../services/patientScope.js";
 import { assertEditWindow } from "../utils/editWindow.js";
 import type { AuthRequest } from "../middlewares/auth.js";
 
@@ -34,8 +34,9 @@ async function computeTotals(items: { food: string; grams: number }[]) {
 
 router.get("/", async (req: AuthRequest, res, next) => {
   try {
-    const filter: Record<string, unknown> = {};
-    if (req.query.patient) filter.patient = req.query.patient;
+    // Paciente: siempre sus propias comidas. Nutricionista: exige patient válido y propio.
+    const patientId = await resolvePatientId(req.user!, req.query.patient);
+    const filter: Record<string, unknown> = { patient: patientId };
     if (req.query.date) filter.date = { $gte: new Date(req.query.date as string) };
     const data = await Meal.find(filter).populate("items.food").sort({ date: -1 });
     res.json({ success: true, data });
@@ -46,13 +47,15 @@ router.get("/", async (req: AuthRequest, res, next) => {
 
 router.post("/", async (req: AuthRequest, res, next) => {
   try {
-    // Paciente solo registra sus propias comidas: fuerza patient al propio.
-    if (req.user!.role === "patient") {
-      const own = await getOwnPatient(req.user!.id);
-      req.body.patient = String(own._id);
-    }
+    // Valida el alcance: paciente solo sus comidas; nutricionista solo sus pacientes.
+    const patientId = await resolvePatientId(req.user!, req.body.patient);
     const totals = await computeTotals(req.body.items);
-    const meal = await Meal.create({ ...req.body, createdBy: req.user!.id, ...totals });
+    const meal = await Meal.create({
+      ...req.body,
+      patient: patientId,
+      createdBy: req.user!.id,
+      ...totals,
+    });
     res.status(201).json({ success: true, data: meal });
   } catch (err) {
     next(err);
@@ -63,15 +66,10 @@ router.put("/:id", async (req: AuthRequest, res, next) => {
   try {
     const doc = await Meal.findById(req.params.id);
     if (!doc) return res.status(404).json({ success: false, message: "No encontrado" });
+    await assertDocAccess(req.user!, doc.patient);
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
-    // Paciente no puede reasignar la comida a otro paciente.
-    if (req.user!.role === "patient") {
-      const own = await getOwnPatient(req.user!.id);
-      if (String(doc.patient) !== String(own._id)) {
-        return res.status(403).json({ success: false, message: "Acceso denegado" });
-      }
-      delete req.body.patient;
-    }
+    // No se permite reasignar la comida a otro paciente.
+    delete req.body.patient;
     if (req.body.items) {
       const totals = await computeTotals(req.body.items);
       Object.assign(doc, req.body, totals);
@@ -89,6 +87,7 @@ router.delete("/:id", async (req: AuthRequest, res, next) => {
   try {
     const doc = await Meal.findById(req.params.id);
     if (!doc) return res.status(404).json({ success: false, message: "No encontrado" });
+    await assertDocAccess(req.user!, doc.patient);
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
     await doc.deleteOne();
     res.json({ success: true, message: "Eliminado" });

@@ -47,6 +47,16 @@ export type NutritionistDashboardSummary = {
   inactivePatients: DashboardPatient[];
 };
 
+export type IMCEstadisticas = {
+  totalPatients: number;
+  underweight: number;
+  normalWeight: number;
+  overweight: number;
+  obese: number;
+};
+
+type IMCMeasurementRow = { _id: mongoose.Types.ObjectId; weight: number; height: number };
+
 type ActivityAggregateRow = { _id: mongoose.Types.ObjectId; last: Date };
 type LastActivity = { date: Date; type: DashboardActivityType };
 
@@ -249,4 +259,46 @@ export async function getNutritionistDashboard(user: AuthUser): Promise<Nutritio
     recentPatients: activePatients.slice(0, DASHBOARD_CONFIG.LIST_LIMIT).map(toDashboardPatient),
     inactivePatients,
   };
+}
+
+export async function getIMCEstadisticas(user: AuthUser): Promise<IMCEstadisticas> {
+  const now = new Date();
+  const cutoff = daysAgo(DASHBOARD_CONFIG.RECENT_MEASUREMENT_DAYS, now);
+
+  const activePatients = await Patient.find({ nutritionist: user.id, isActive: true }).select("_id");
+  const activeIds = activePatients.map((patient) => patient._id as mongoose.Types.ObjectId);
+
+  const empty: IMCEstadisticas = {
+    totalPatients: 0,
+    underweight: 0,
+    normalWeight: 0,
+    overweight: 0,
+    obese: 0,
+  };
+  if (activeIds.length === 0) return empty;
+
+  const rows = await Measurement.aggregate<IMCMeasurementRow>([
+    {
+      $match: {
+        patient: { $in: activeIds },
+        date: { $gte: cutoff },
+        weight: { $gt: 0 },
+        height: { $gt: 0 },
+      },
+    },
+    { $sort: { date: -1 } },
+    { $group: { _id: "$patient", weight: { $first: "$weight" }, height: { $first: "$height" } } },
+  ]);
+
+  const result: IMCEstadisticas = { ...empty, totalPatients: rows.length };
+  for (const row of rows) {
+    const heightMeters = row.height / 100;
+    const imc = row.weight / (heightMeters * heightMeters);
+    if (imc < 18.5) result.underweight += 1;
+    else if (imc < 25) result.normalWeight += 1;
+    else if (imc < 30) result.overweight += 1;
+    else result.obese += 1;
+  }
+
+  return result;
 }
