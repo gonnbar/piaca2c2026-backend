@@ -6,9 +6,8 @@ export interface IConsultation extends mongoose.Document {
   patient: mongoose.Types.ObjectId;
   nutritionist: mongoose.Types.ObjectId;
   date: Date;
-  observations: string;
-  weight?: number;
-  notes?: string;
+  observations: string; // Observaciones visibles para el paciente
+  privateNotes?: string; // Notas privadas visibles solo para el nutricionista
 }
 
 const consultationSchema = new mongoose.Schema<IConsultation>(
@@ -16,9 +15,8 @@ const consultationSchema = new mongoose.Schema<IConsultation>(
     patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient", required: true },
     nutritionist: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     date: { type: Date, default: Date.now },
-    observations: { type: String, required: true },
-    weight: Number,
-    notes: String,
+    observations: { type: String, required: true, trim: true },
+    privateNotes: { type: String, trim: true, select: false },
   },
   { timestamps: true },
 );

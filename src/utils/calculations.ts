@@ -3,23 +3,23 @@
  * AGENTS.md: "Las fórmulas deben estar separadas de los controladores y de la UI."
  */
 
+/** Factores de Atwater: kcal por gramo de cada macronutriente. */
+export const KCAL_PER_GRAM = { protein: 4, carbs: 4, fat: 9 } as const;
+
+/**
+ * Calorías por 100g calculadas desde los macronutrientes.
+ * El cliente no envía kcal: se derivan siempre de P/C/G.
+ */
+export function calculateFoodCalories(protein: number, carbs: number, fat: number): number {
+  return Math.round(
+    protein * KCAL_PER_GRAM.protein + carbs * KCAL_PER_GRAM.carbs + fat * KCAL_PER_GRAM.fat,
+  );
+}
+
 export function calculateIMC(weightKg: number, heightCm: number): number {
   if (heightCm <= 0) throw new Error("Altura debe ser mayor a 0");
   const heightM = heightCm / 100;
   return Number((weightKg / (heightM * heightM)).toFixed(2));
-}
-
-/** Placeholder hasta definir protocolo (Faulkner, Yuhasz, etc.) */
-export function calculateBodyFatPercentage(
-  _measurements: Record<string, number>,
-): number | null {
-  return null;
-}
-
-export function calculateMusclePercentage(
-  _measurements: Record<string, number>,
-): number | null {
-  return null;
 }
 
 export function calculateMealTotals(

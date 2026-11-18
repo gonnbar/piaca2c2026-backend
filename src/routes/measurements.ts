@@ -1,55 +1,155 @@
-import { Router } from "express";
+import { Router, type NextFunction, type Response } from "express";
 import { authenticate } from "../middlewares/auth.js";
+import { validate } from "../middlewares/validate.js";
 import { Measurement } from "../models/Measurement.js";
-import { calculateIMC } from "../utils/calculations.js";
+import { assertDocAccess, resolvePatientId } from "../services/patientScope.js";
+import { computeMeasurementDerived } from "../services/measurementService.js";
+import { createMeasurementValidator, updateMeasurementValidator } from "../validators/measurement.js";
 import { assertEditWindow } from "../utils/editWindow.js";
 import type { AuthRequest } from "../middlewares/auth.js";
 
 const router = Router();
 router.use(authenticate);
 
-router.get("/", async (req: AuthRequest, res, next) => {
+const MEASUREMENT_FIELDS = [
+  "weight",
+  "height",
+  "bicipital",
+  "tricipital",
+  "subescapular",
+  "suprailiaco",
+  "crural",
+  "abdominal",
+  "pectoral",
+  "axilar",
+  "peroneoGemelar",
+] as const;
+
+const pickMeasurement = (obj: Record<string, unknown>) =>
+  Object.fromEntries(Object.entries(obj).filter(([key]) => (MEASUREMENT_FIELDS as readonly string[]).includes(key)));
+
+// Solo el nutricionista registra altura y pliegues (AGENTS.md: Roles).
+// El paciente solo puede registrar peso y consultar sus mediciones.
+const NUTRITIONIST_ONLY_FIELDS = [
+  "height",
+  "bicipital",
+  "tricipital",
+  "subescapular",
+  "suprailiaco",
+  "crural",
+  "abdominal",
+  "pectoral",
+  "axilar",
+  "peroneoGemelar",
+  "imc",
+  "bodyFatPercentage",
+  "musclePercentage",
+  "fatMass",
+  "leanMass",
+  "bodyFatMethod",
+  "bodyFatMethodVersion",
+];
+
+function assertMeasurementRole(body: Record<string, unknown>, role: string) {
+  if (role === "nutritionist") return;
+  const forbidden = NUTRITIONIST_ONLY_FIELDS.filter(
+    (field) => body[field] !== undefined && body[field] !== null && body[field] !== "",
+  );
+  if (forbidden.length > 0) {
+    throw Object.assign(new Error("Solo el nutricionista puede registrar altura y pliegues"), {
+      statusCode: 403,
+    });
+  }
+}
+
+const notFound = () => Object.assign(new Error("Medición no encontrada"), { statusCode: 404 });
+
+router.get("/", async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const filter: Record<string, unknown> = {};
-    if (req.query.patient) filter.patient = req.query.patient;
-    const data = await Measurement.find(filter).sort({ date: -1 });
+    const patientId = await resolvePatientId(req.user!, req.query.patient);
+    const data = await Measurement.find({ patient: patientId }).sort({ date: -1 });
     res.json({ success: true, data });
   } catch (err) {
     next(err);
   }
 });
 
-router.post("/", async (req: AuthRequest, res, next) => {
+router.post("/", createMeasurementValidator, validate, async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const payload = { ...req.body, createdBy: req.user!.id };
-    if (payload.weight && payload.height) {
-      payload.imc = calculateIMC(payload.weight, payload.height);
+    assertMeasurementRole(req.body, req.user!.role);
+
+    const patientId = await resolvePatientId(req.user!, req.body.patient);
+    const date = req.body.date instanceof Date ? req.body.date : new Date();
+
+    const { anthropometry, fields } = await computeMeasurementDerived(
+      patientId,
+      { ...req.body, date },
+      date,
+    );
+
+    const measurement = await Measurement.create({
+      ...pickMeasurement(req.body),
+      patient: patientId,
+      createdBy: req.user!.id,
+      date,
+      ...fields,
+    });
+
+    res.status(201).json({ success: true, data: measurement, anthropometry });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put("/:id", updateMeasurementValidator, validate, async (req: AuthRequest, res: Response, next: NextFunction) => {
+  try {
+    const doc = await Measurement.findById(req.params.id);
+    if (!doc) throw notFound();
+
+    await assertDocAccess(req.user!, doc.patient);
+    if (doc.consultation) {
+      throw Object.assign(
+        new Error("La medición pertenece a una consulta. Editala desde la consulta."),
+        { statusCode: 409 },
+      );
     }
-    const measurement = await Measurement.create(payload);
-    res.status(201).json({ success: true, data: measurement });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.put("/:id", async (req: AuthRequest, res, next) => {
-  try {
-    const doc = await Measurement.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "No encontrado" });
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
-    Object.assign(doc, req.body);
+    assertMeasurementRole(req.body, req.user!.role);
+
+    const date = req.body.date instanceof Date ? req.body.date : (doc.date ?? new Date());
+    const mergedInput = { ...doc.toObject(), ...pickMeasurement(req.body), date };
+
+    const { anthropometry, fields } = await computeMeasurementDerived(
+      String(doc.patient),
+      mergedInput,
+      date,
+    );
+
+    Object.assign(doc, pickMeasurement(req.body));
+    if (req.body.date instanceof Date) doc.date = req.body.date;
+    Object.assign(doc, fields);
     await doc.save();
-    res.json({ success: true, data: doc });
+
+    res.json({ success: true, data: doc, anthropometry });
   } catch (err) {
     next(err);
   }
 });
 
-router.delete("/:id", async (req: AuthRequest, res, next) => {
+router.delete("/:id", async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const doc = await Measurement.findById(req.params.id);
-    if (!doc) return res.status(404).json({ success: false, message: "No encontrado" });
+    if (!doc) throw notFound();
+
+    await assertDocAccess(req.user!, doc.patient);
+    if (doc.consultation) {
+      throw Object.assign(
+        new Error("La medición pertenece a una consulta. Corregila o eliminá la consulta."),
+        { statusCode: 409 },
+      );
+    }
     assertEditWindow({ createdAt: doc.createdAt as unknown as Date, userRole: req.user!.role });
+
     await doc.deleteOne();
     res.json({ success: true, message: "Eliminado" });
   } catch (err) {

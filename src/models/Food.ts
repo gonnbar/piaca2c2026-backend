@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { FOOD_CATEGORIES } from "../utils/foodCategories.js";
 
 export interface IFood extends mongoose.Document {
   createdAt?: Date;
@@ -9,6 +10,8 @@ export interface IFood extends mongoose.Document {
   protein: number;
   carbs: number;
   fat: number;
+  // Borrado lógico: los alimentos nunca se eliminan físicamente.
+  isActive: boolean;
 }
 
 const foodSchema = new mongoose.Schema<IFood>(
@@ -16,13 +19,14 @@ const foodSchema = new mongoose.Schema<IFood>(
     name: { type: String, required: true, unique: true, trim: true },
     category: {
       type: String,
-      enum: ["carnes", "huevos", "leche", "quesos", "yogur", "verduras", "cereales", "frutas", "semillas", "miel", "azucar", "aceites", "grasas", "otros"],
+      enum: [...FOOD_CATEGORIES],
       required: true,
     },
     calories: { type: Number, required: true, min: 0 },
     protein: { type: Number, required: true, min: 0 },
     carbs: { type: Number, required: true, min: 0 },
     fat: { type: Number, required: true, min: 0 },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true },
 );

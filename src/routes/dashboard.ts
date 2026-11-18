@@ -1,0 +1,12 @@
+import { Router } from "express";
+import { authenticate } from "../middlewares/auth.js";
+import { authorize } from "../middlewares/authorize.js";
+import * as dashboardController from "../controllers/dashboardController.js";
+
+const router = Router();
+
+router.use(authenticate);
+router.get("/summary", authorize("nutritionist"), dashboardController.summary);
+router.get("/imc-estadisticas", authorize("nutritionist"), dashboardController.imcEstadisticas);
+
+export default router;

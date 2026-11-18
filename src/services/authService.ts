@@ -26,3 +26,13 @@ export async function registerNutritionist(data: { name: string; email: string; 
   const user = await User.create({ ...data, role: "nutritionist" });
   return { id: user._id, name: user.name, email: user.email, role: user.role };
 }
+
+export async function changePassword(userId: string, currentPassword: string, newPassword: string) {
+  const user = await User.findById(userId).select("+password");
+  if (!user || !user.isActive) throw Object.assign(new Error("Usuario no encontrado"), { statusCode: 404 });
+  if (!(await user.comparePassword(currentPassword))) {
+    throw Object.assign(new Error("Contraseña actual incorrecta"), { statusCode: 400 });
+  }
+  user.password = newPassword;
+  await user.save();
+}
