@@ -64,6 +64,33 @@ npm run seed     # tsx src/seeds/foods.ts (19 alimentos MVP)
 # seeds/admin.ts crea admin@piaca.com / admin123
 ```
 
+## Docker (MongoDB)
+
+El backend incluye un `docker-compose.yml` para levantar MongoDB y Mongo Express.
+
+```bash
+cd piaca2c2026-backend
+docker compose up -d
+docker compose ps
+```
+
+Comandos útiles:
+
+```bash
+docker compose logs -f mongodb
+docker compose stop
+docker compose down
+```
+
+Para borrar los datos, el compose usa un bind mount `./mongo_data`:
+
+```bash
+rm -rf mongo_data
+```
+
+`docker compose down -v` no elimina ese directorio porque no es un volumen nombrado.
+
+
 ## Seguridad & Buenas prácticas
 - Passwords hasheados bcrypt (nunca plain, `User.ts:28`), no se exponen en JSON.
 - Validación con express-validator antes de DB.
